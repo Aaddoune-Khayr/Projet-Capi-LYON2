@@ -1,8 +1,13 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 
+from capi.domain.backlog import load_backlog, premiere_fonctionnalite
 from capi.domain.party import Party
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+BACKLOG_DEFAUT = REPO_ROOT / "exemples" / "backlog-bibliotheque.json"
 
 
 def _lire_entree(prompt: str) -> str:
@@ -41,6 +46,15 @@ def _lire_pseudos(n: int) -> list[str]:
     return pseudos
 
 
+def _lire_chemin_backlog() -> Path:
+    suggestion = str(BACKLOG_DEFAUT)
+    raw = _lire_entree(f"Chemin du backlog JSON [{suggestion}] : ")
+    path = Path(raw) if raw else BACKLOG_DEFAUT
+    if not path.is_file():
+        path = REPO_ROOT / path
+    return path
+
+
 def main() -> None:
     print("=== CAPI — Planning poker (walking skeleton) ===\n")
 
@@ -52,9 +66,22 @@ def main() -> None:
         sys.exit(1)
 
     party = Party(players=players)
-    print(f"\nPartie configurée avec {len(party.players)} joueur(s) :")
-    for player in party.players:
-        print(f"  - {player.pseudo}")
+
+    path = _lire_chemin_backlog()
+    try:
+        backlog = load_backlog(path)
+    except ValueError as exc:
+        print(f"Erreur backlog : {exc}")
+        sys.exit(1)
+
+    party.attacher_backlog(backlog)
+    feature = premiere_fonctionnalite(backlog)
+    if feature is None:
+        print("Le backlog ne contient aucune fonctionnalité.")
+        sys.exit(1)
+
+    print(f"\nProjet : {backlog.projet}")
+    print(f"Fonctionnalité en cours : [{feature.id}] {feature.titre}")
 
 
 if __name__ == "__main__":
