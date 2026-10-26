@@ -5,6 +5,7 @@ from pathlib import Path
 
 from capi.domain.backlog import load_backlog, premiere_fonctionnalite
 from capi.domain.party import Party
+from capi.domain.vote import CARTES_PLANNING_POKER, VoteRound
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BACKLOG_DEFAUT = REPO_ROOT / "exemples" / "backlog-bibliotheque.json"
@@ -55,6 +56,36 @@ def _lire_chemin_backlog() -> Path:
     return path
 
 
+def _afficher_cartes() -> None:
+    print("Cartes possibles :", ", ".join(CARTES_PLANNING_POKER))
+
+
+def _tour_vote_secret(party: Party) -> VoteRound:
+    round_ = VoteRound()
+    pseudos = tuple(p.pseudo for p in party.players)
+    print("\n--- Tour de vote (secret) ---")
+    _afficher_cartes()
+    for player in party.players:
+        print(f"\n>>> {player.pseudo} : à vous de voter.")
+        print("    (Les autres joueurs ne doivent pas regarder l'écran.)")
+        while True:
+            carte = _lire_entree("Votre carte : ")
+            try:
+                round_.enregistrer_vote(player.pseudo, carte)
+                break
+            except ValueError as exc:
+                print(exc)
+    assert round_.tous_ont_vote(pseudos)
+    return round_
+
+
+def _reveler_votes(round_: VoteRound) -> None:
+    print("\n--- Révélation des votes ---")
+    for pseudo, carte in round_.votes_revelés().items():
+        print(f"  {pseudo} : {carte}")
+    print("(La validation des votes sera ajoutée en séance 2.)")
+
+
 def main() -> None:
     print("=== CAPI — Planning poker (walking skeleton) ===\n")
 
@@ -82,6 +113,17 @@ def main() -> None:
 
     print(f"\nProjet : {backlog.projet}")
     print(f"Fonctionnalité en cours : [{feature.id}] {feature.titre}")
+
+    if _lire_entree("\nLancer un tour de vote pour cette fonctionnalité ? [o/N] : ").lower() in (
+        "o",
+        "oui",
+        "y",
+        "yes",
+    ):
+        round_ = _tour_vote_secret(party)
+        _reveler_votes(round_)
+
+    print("\nFin du skeleton pour cette séance. À bientôt pour la séance 2.")
 
 
 if __name__ == "__main__":

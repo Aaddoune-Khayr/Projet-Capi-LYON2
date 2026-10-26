@@ -16,6 +16,12 @@ pip install -e .
 python -m capi
 ```
 
+La commande `capi` est aussi disponible après installation si le dossier `Scripts` de Python est dans le `PATH` :
+
+```bash
+capi
+```
+
 ## Format du backlog JSON
 
 Fichier d'exemple : `exemples/backlog-bibliotheque.json`.
@@ -27,18 +33,18 @@ Fichier d'exemple : `exemples/backlog-bibliotheque.json`.
 | `fonctionnalites[].id` | string | Identifiant stable (ex. `F1`) |
 | `fonctionnalites[].titre` | string | Intitulé affiché aux joueurs |
 
-Au lancement, l'application affiche la **première** entrée de `fonctionnalites`.
+Au lancement, l'application affiche la **première** entrée de `fonctionnalites`. Un tour de vote secret optionnel permet de choisir une carte planning poker puis d'afficher tous les votes (sans règle de validation pour l'instant).
 
 ## Tests
 
-Les tests automatisés arrivent en **séance 2**. Pour l'instant, vérifiez à la main en lançant `python -m capi`.
+Les tests automatisés (critères d'acceptation US-2, US-3, US-4) arrivent en **séance 2**. Pour l'instant, vérifiez à la main en lançant `python -m capi`.
 
 ## Organisation du code
 
 | Dossier | Rôle |
 |---|---|
-| `src/capi/domain/` | Logique métier (partie, backlog, votes) |
-| `src/capi/ui/` | Interface console |
+| `src/capi/domain/` | Logique métier : backlog, partie, votes (testable sans interface) |
+| `src/capi/ui/` | Interface console (saisie joueurs, affichage, votes) |
 | `exemples/` | Données JSON d'exemple |
 
 **Choix techniques (brouillon ADR-01)** : Python pour la simplicité du walking skeleton, la lecture JSON native et les tests unitaires prévus en séance 2. La séparation `domain` / `ui` permet de tester les règles de validation sans lancer la console.
