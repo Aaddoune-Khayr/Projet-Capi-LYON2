@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 from capi.domain.backlog import load_backlog, premiere_fonctionnalite
+from capi.domain.moteur_regles import evaluer_vote
 from capi.domain.party import Party
 from capi.domain.vote import CARTES_PLANNING_POKER, VoteRound
 
@@ -60,6 +61,14 @@ def _afficher_cartes() -> None:
     print("Cartes possibles :", ", ".join(CARTES_PLANNING_POKER))
 
 
+def _lire_regle() -> str:
+    while True:
+        regle = _lire_entree("Règle de validation (strict/discussion) : ").lower()
+        if regle in ("strict", "discussion"):
+            return regle
+        print("Choisissez « strict » ou « discussion ».")
+
+
 def _tour_vote_secret(party: Party) -> VoteRound:
     round_ = VoteRound()
     pseudos = tuple(p.pseudo for p in party.players)
@@ -83,7 +92,52 @@ def _reveler_votes(round_: VoteRound) -> None:
     print("\n--- Révélation des votes ---")
     for pseudo, carte in round_.votes_revelés().items():
         print(f"  {pseudo} : {carte}")
-    print("(La validation des votes sera ajoutée en séance 2.)")
+
+
+def _annoncer_discussion_extremes(votes: dict[str, str]) -> None:
+    rangs = {
+        carte: rang
+        for rang, carte in enumerate(CARTES_PLANNING_POKER)
+        if carte not in ("?", "café")
+    }
+    votes_utiles = [(pseudo, carte) for pseudo, carte in votes.items() if carte in rangs]
+    if not votes_utiles:
+        print("Aucun vote exploitable pour désigner les extrêmes.")
+        return
+
+    rang_min = min(rangs[carte] for _, carte in votes_utiles)
+    rang_max = max(rangs[carte] for _, carte in votes_utiles)
+    plus_bas = [pseudo for pseudo, carte in votes_utiles if rangs[carte] == rang_min]
+    plus_haut = [pseudo for pseudo, carte in votes_utiles if rangs[carte] == rang_max]
+    carte_min = next(carte for _, carte in votes_utiles if rangs[carte] == rang_min)
+    carte_max = next(carte for _, carte in votes_utiles if rangs[carte] == rang_max)
+    print(
+        "Discussion entre les extrêmes : "
+        f"{', '.join(plus_bas)} ({carte_min}) et "
+        f"{', '.join(plus_haut)} ({carte_max})."
+    )
+
+
+def _lancer_boucle_vote(party: Party, regle: str) -> None:
+    tour = 1
+    while True:
+        print(f"\n=== Tour {tour} ===")
+        round_ = _tour_vote_secret(party)
+        votes = round_.votes_revelés()
+        _reveler_votes(round_)
+
+        statut, estimation = evaluer_vote(list(votes.values()), regle, tour)
+        if statut == "valide":
+            print(f"\nEstimation validée : {estimation}")
+            return
+
+        print("\nL'estimation n'est pas validée.")
+        if regle == "discussion":
+            _annoncer_discussion_extremes(votes)
+            _lire_entree("Appuyez sur Entrée après la discussion pour revoter.")
+        else:
+            print("Un nouveau tour commence.")
+        tour += 1
 
 
 def main() -> None:
@@ -120,10 +174,10 @@ def main() -> None:
         "y",
         "yes",
     ):
-        round_ = _tour_vote_secret(party)
-        _reveler_votes(round_)
+        regle = _lire_regle()
+        _lancer_boucle_vote(party, regle)
 
-    print("\nFin du skeleton pour cette séance. À bientôt pour la séance 2.")
+    print("\nFin de la partie.")
 
 
 if __name__ == "__main__":
