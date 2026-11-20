@@ -36,3 +36,10 @@ Fichier d'instructions pour agent versionné (`CLAUDE.md`, `AGENTS.md`...) : non
 
 **Intervention :** Copilot a aidé à définir les déclencheurs du workflow, l'environnement Python, l'installation des dépendances et l'exécution automatique des tests avec pytest.
 
+
+### Bloc C — Implémentation et intégration du moteur de règles
+
+- **Demande :** Utiliser l'IA pour implémenter le moteur de règles du Planning Poker et l'intégrer dans la boucle de vote de l'application.
+- **Résultat :** Proposition acceptée après vérification.
+- **Vérifications :** Exécution de `python -m pytest` : 6 tests réussis. Vérification des parcours console avec les règles `strict` et `discussion`. Exécution de `git diff --check` sans erreur.
+- **Modifications :** Implémentation de `evaluer_vote`, intégration dans `console.py` et mise à jour du `README.md`. Aucun test n'a été modifié.
