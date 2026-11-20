@@ -3,7 +3,7 @@ from capi.domain.moteur_regles import evaluer_vote
 def test_CA_02_1_strict_revote1():
 
     # Préparer
-    votes = ["3", "5", "8", "5"]
+    votes = ["3", "5", "8", "3"]
     regle = "strict"
     tour = 1
 
@@ -25,7 +25,7 @@ def test_CA_03_2_strict_Valide1():
     resultat = evaluer_vote(votes, regle, tour)
 
     # Vérifier
-    assert resultat == ("valide", None)
+    assert resultat == ("valide", 5)
 
 
 def test_CA_xx_y_strict_revote2():
@@ -70,7 +70,7 @@ def test_CA_xx_y_mediane_Valide2():
     resultat = evaluer_vote(votes, regle, tour)
 
     # Vérifier
-    assert resultat == ("valide", None)
+    assert resultat == ("valide", 5)
 
 
 
@@ -87,4 +87,4 @@ def test_CA_xx_y_strict_Valide3():
     resultat = evaluer_vote(votes, regle, tour)
 
     # Vérifier
-    assert resultat == ("valide", None)
+    assert resultat == ("valide", 5)

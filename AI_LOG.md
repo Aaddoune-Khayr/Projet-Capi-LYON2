@@ -25,3 +25,14 @@ Fichier d'instructions pour agent versionné (`CLAUDE.md`, `AGENTS.md`...) : non
 - Nombre d'entrées et de propositions rejetées ou corrigées :
 - Tâches où l'IA a fait gagner du temps :
 - Tâches où l'IA a fait perdre du temps :
+
+
+
+## Utilisation de l'IA – Bloc B (Configuration CI)
+
+**Outil utilisé :** GitHub Copilot
+
+**Utilisation :** Aide à la création et à la configuration du workflow GitHub Actions (`.github/workflows/ci.yml`).
+
+**Intervention :** Copilot a aidé à définir les déclencheurs du workflow, l'environnement Python, l'installation des dépendances et l'exécution automatique des tests avec pytest.
+
