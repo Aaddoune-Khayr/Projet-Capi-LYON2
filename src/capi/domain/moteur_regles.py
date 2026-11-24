@@ -1,8 +1,30 @@
 from capi.domain.vote import CARTES_PLANNING_POKER
 
+""" J'ai documenté une fonction dans le fichier `moteur_regle.py` (`evaluer_vote`) et deux méthodes dans le fichier `vote.py` (`tous_ont_vote` et `votes_revelés`). Les trois documentations sont donc réparties sur ces deux fichiers. """
+
 
 def evaluer_vote(votes, regle, tour):
-    """Évalue l'unanimité; la discussion associée à un revote relève de l'interface."""
+    """
+    Permet de savoir si on passe le tour ou si on dois revoter
+
+    Parametres :
+        Vote :  la fonction filtre les vote, et regarde si ils sont tous pareille ou pas
+        regle :  c'est simplement le fait de verifier si le choix de la regle est bien une des trois regles (strict, mediane, discussion)
+        tour : le code regarde si on est au premier tour ou pas, car il y a une regle d'unanimité au premier tour obligatoire
+
+    Returns:
+        peut renvoyer plusieurs chose dépandant de la situation :
+                - "revote, none" : si il faut revoter
+                - "valide, et une estimation" : si le vote est valide
+
+    Raises:
+    ValueError : quand il y a une carte invalide ou une règle inconnue
+        
+
+    Règle appliquée :
+        Si le premier vote est identique au autre, on valide, sinon on revote (apres avoir écarter les carte "?" et "café")
+    """
+
     if not votes:
         return "revote", None
 
