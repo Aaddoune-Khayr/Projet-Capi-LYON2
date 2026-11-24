@@ -33,7 +33,7 @@ Fichier d'exemple : `exemples/backlog-bibliotheque.json`.
 | `fonctionnalites[].id` | string | Identifiant stable (ex. `F1`) |
 | `fonctionnalites[].titre` | string | Intitulé affiché aux joueurs |
 
-Au lancement, l'application affiche la **première** entrée de `fonctionnalites`. Un tour de vote secret optionnel permet de choisir une carte planning poker puis d'afficher tous les votes (sans règle de validation pour l'instant).
+Au lancement, l'application affiche la **première** entrée de `fonctionnalites`. Si vous choisissez de voter, sélectionnez la règle `strict` ou `discussion`. Les votes sont révélés à la fin de chaque tour : l'unanimité est toujours requise au premier tour, puis la règle choisie est appliquée. En cas de désaccord, un nouveau tour commence; avec `discussion`, les joueurs ayant choisi les cartes extrêmes échangent avant le revote. L'estimation est affichée lorsqu'elle est validée.
 
 ## Tests
 

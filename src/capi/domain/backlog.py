@@ -28,6 +28,10 @@ def load_backlog(path: Path | str) -> Backlog:
     except json.JSONDecodeError as exc:
         raise ValueError(f"JSON invalide : {path}") from exc
 
+    return backlog_from_data(raw)
+
+
+def backlog_from_data(raw: object) -> Backlog:
     if not isinstance(raw, dict):
         raise ValueError("Le backlog doit être un objet JSON.")
 
