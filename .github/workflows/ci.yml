@@ -25,3 +25,12 @@ jobs:
 
       - name: Lancer les tests
         run: python -m pytest
+
+      - name: Générer la documentation
+        run: pip install pdoc && pdoc src -o site
+
+      - name: Archiver la documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: site

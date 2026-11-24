@@ -8,6 +8,7 @@
 | Outil | Modèle (si connu) | Mode (autocomplétion, chat, agent) |
 |---|---|---|
 | Cursor | Composer | Agent (chat) |
+| Copilot | Copilot fusion | Agent (chat) |
 
 Fichier d'instructions pour agent versionné (`CLAUDE.md`, `AGENTS.md`...) : non
 
@@ -43,3 +44,10 @@ Fichier d'instructions pour agent versionné (`CLAUDE.md`, `AGENTS.md`...) : non
 - **Résultat :** Proposition acceptée après vérification.
 - **Vérifications :** Exécution de `python -m pytest` : 6 tests réussis. Vérification des parcours console avec les règles `strict` et `discussion`. Exécution de `git diff --check` sans erreur.
 - **Modifications :** Implémentation de `evaluer_vote`, intégration dans `console.py` et mise à jour du `README.md`. Aucun test n'a été modifié.
+
+### 2026-11-24 : Génération automatique de la documentation Python (Bloc C2)
+
+- **Demande :** Ajouter à la CI GitHub Actions la génération de documentation du code Python situé dans `src`, puis conserver le résultat comme artefact du workflow.
+- **Intervention de l'IA :** Configuration dans `.github/workflows/ci.yml` de l'installation de pdoc, de la génération dans `site` et de la sauvegarde de ce dossier avec `actions/upload-artifact@v4` sous le nom `documentation`.
+- **Vérification :** Exécution locale de `python -m pdoc src -o site` réussie avec l'organisation actuelle du projet ; des pages HTML ont été générées.
+- **Modifications :** Ajout de `site/` à `.gitignore` afin que le résultat généré ne soit pas ajouté au dépôt. Aucune fonction métier, aucun test ni aucune docstring n'a été modifié.
