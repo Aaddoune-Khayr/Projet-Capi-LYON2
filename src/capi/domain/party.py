@@ -17,6 +17,9 @@ class Party:
     players: tuple[Player, ...]
     backlog: Backlog | None = None
     feature_index: int = 0
+    regle: str | None = None
+    estimations: list[int | str] = field(default_factory=list)
+    tour_courant: int = 1
 
     @staticmethod
     def creer_joueurs(pseudos: list[str]) -> tuple[Player, ...]:
@@ -37,3 +40,12 @@ class Party:
         if self.feature_index >= len(self.backlog.fonctionnalites):
             return None
         return self.backlog.fonctionnalites[self.feature_index]
+
+    def enregistrer_estimation(self, estimation: int | str) -> None:
+        if self.fonctionnalite_courante() is None:
+            raise ValueError("Aucune fonctionnalité n'est en cours d'estimation.")
+        if self.feature_index != len(self.estimations):
+            raise ValueError("L'état des estimations de la partie est incohérent.")
+        self.estimations.append(estimation)
+        self.feature_index += 1
+        self.tour_courant = 1
