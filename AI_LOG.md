@@ -47,7 +47,7 @@ Fichier d'instructions pour agent versionné (`CLAUDE.md`, `AGENTS.md`...) : non
 
 ### 2026-11-24 : Génération automatique de la documentation Python (Bloc C2)
 
-- **Demande :** Ajouter à la CI GitHub Actions la génération de documentation du code Python situé dans `src`, puis conserver le résultat comme artefact du workflow.
-- **Intervention de l'IA :** Configuration dans `.github/workflows/ci.yml` de l'installation de pdoc, de la génération dans `site` et de la sauvegarde de ce dossier avec `actions/upload-artifact@v4` sous le nom `documentation`.
-- **Vérification :** Exécution locale de `python -m pdoc src -o site` réussie avec l'organisation actuelle du projet ; des pages HTML ont été générées.
+- **Demande :** Ajouter à la CI GitHub Actions la génération de documentation du package Python `capi` (situé dans `src/capi`), puis conserver le résultat comme artefact du workflow.
+- **Intervention de l'IA :** Configuration dans `.github/workflows/ci.yml` de l'installation de pdoc, de la commande `python -m pdoc capi -o site` et de la sauvegarde du dossier `site` avec `actions/upload-artifact@v4` sous le nom `documentation`.
+- **Vérification :** Exécution locale de `python -m pdoc capi -o site` réussie ; six fichiers HTML ont été générés.
 - **Modifications :** Ajout de `site/` à `.gitignore` afin que le résultat généré ne soit pas ajouté au dépôt. Aucune fonction métier, aucun test ni aucune docstring n'a été modifié.
